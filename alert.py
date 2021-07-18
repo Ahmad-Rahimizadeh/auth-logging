@@ -36,7 +36,7 @@ response = host.search(
 )
 
 #this file contain slack webhook.
-credentials = 'credentials.json'
+credentials = '/path/to/credentials.json'
  
 def get_credentials(credentials):
     '''
