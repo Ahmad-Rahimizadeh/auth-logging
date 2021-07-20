@@ -1,5 +1,6 @@
 # auth-logging
-this is simple python app that alerts you for failed login to your remote servers using slack. you can use other apps to get notice but i used slack here.
+this is simple python app that alerts you for failed login to your remote servers using telegram. you can use other apps to get notice but i used telegram here.
+make sure you have created a telegram bot and telegram channel. don't forget to add telegram bot to your channel as an administrator.
 
 install requirements using below command:
 ```
