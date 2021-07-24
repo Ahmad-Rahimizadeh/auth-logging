@@ -1,4 +1,3 @@
-import json
 import requests
 from elasticsearch import Elasticsearch
 import urllib3
