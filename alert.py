@@ -5,11 +5,15 @@ import urllib3
 
 urllib3.disable_warnings()
 
-#define your elasticsearch 
-host = Elasticsearch([{'host': '', 'port': ''}], http_auth=('<elastic user>', '<elastic password>'))
+host = Elasticsearch([{'host': '<elasticsearch host>', 'port': '<elasticsearch port>'}], http_auth=('<elasticsearch username>', '<elasticsearch password>'))
 
-#searching for faild in message field inside auth-index in last 30m.
-response = host.search(
+proxies = { #comment this part if you don't want to use socks5 proxy
+        'http': 'socks5h://',
+        'https': 'socks5h://'
+}
+
+def failed_login():
+  response = host.search(
     index="auth-log",
     body={
    "query": {
@@ -17,34 +21,34 @@ response = host.search(
       "must": [
         {
           "match": {
-            "message": "failed"
+            "message": "Failed password"
           }
         },{
           "range": {
             "@timestamp": {
                "gte": "now-30m"
 
+              }
             }
           }
-        }
-      ]
+        ]
+      }
     }
   }
-}
-)
+  )
 
-#define proxy if you are in somewhere that telegram not working without proxy
-proxies = {
-        'http': 'socks5h://',
-        'https': 'socks5h://'
-}
-
-
-for hit in response['hits']['hits']:
+  for hit in response['hits']['hits']:
     message = hit['_source']['message']
     print(message)
     data = {'text':message}
     bot_token = ''
-    bot_chatID = '' #your telegram channel id
+    bot_chatID = ''
     send_text = 'https://api.telegram.org/bot' + bot_token + '/sendMessage?chat_id=' + bot_chatID + '&parse_mode=Markdown&text=' + message
-    requests.get(send_text, proxies=proxies)
+    requests.get(send_text, proxies=proxies) #comment proxies if you don't want use socks5 proxy
+
+
+def main():
+  failed_login()
+
+if __name__ == "__main__":
+  main()
